@@ -1,0 +1,10 @@
+node_modules/
+build/
+package/
+*.tgz
+*.swp
+.tscache
+tscommand*.txt
+xunit-results.xml
+coverage/
+test/settings.json
