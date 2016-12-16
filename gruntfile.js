@@ -53,7 +53,7 @@ module.exports = function(grunt) {
     copy: {
       test: {
         nonull: true,
-        src: ['test/settings.json', 'test/certs/test.pem'],
+        src: ['test/certs/test.pem'],
         dest:'build/'
       },
       build: {
