@@ -17,12 +17,23 @@
 var NodeRedUtil = require('node-red/red/runtime/util'); // the real Node-RED util code
 import * as NodeRed  from '../../typings/nodered';
 import { MockNodes } from './MockNodes';
+import * as EventEmitter from 'events';
 
 // Don't need test coverage for the mock classes.
 /* istanbul ignore next */
 
 export class MockRed implements NodeRed.RED
 {
+    // null properties, empty for now.
+    auth: any;
+    comms: any; 
+    events: EventEmitter;
+    httpAdmin: any;
+    httpNode: any;
+    library: any;
+    server: any;
+    version: any;
+
     nodes: MockNodes;
     util: NodeRed.Util;
     log: NodeRed.Log;
@@ -34,6 +45,7 @@ export class MockRed implements NodeRed.RED
     {
         this.util = NodeRedUtil;
         this.nodes = new MockNodes();
+        this.events = new EventEmitter();
         this.settings = {
             userDir: ''
         }

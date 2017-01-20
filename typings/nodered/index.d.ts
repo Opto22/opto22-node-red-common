@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+import * as EventEmitter from 'events';
+
 /** 
  * A meager collection of Node-RED types for TypeScript.
  * Not much more than what the Opto 22 nodes need.
@@ -78,11 +80,37 @@ export class Util
 // https://github.com/node-red/node-red/blob/master/red/red.js
 export interface RED
 {
-    nodes: Nodes;
-    util: Util;
+    auth: {
+        needsPermission(permission: any) : any; // TODO review
+    }
+
+    comms: {
+        publish(topic: any, data: any, retain: any) : any; // TODO review
+    }
+
+    events: EventEmitter;
+
+    httpAdmin(req: any, res: any, next: any) : any; // TODO review
+
+    httpNode(req: any, res: any, next: any) : any; // TODO review
+
+    library: {
+        register(type: any) : any; // TODO review
+    }
+
     log: Log;
+
+    nodes: Nodes;
+
+    server: any; // TODO review
+
     settings: {
         userDir: string;
+        // TODO much more to add
     };
+
+    util: Util;
+
+    version() : string;
 }
 
