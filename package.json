@@ -10,7 +10,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@types/node": "^6.0.40",
+    "@types/node": "6.0.40",
     "@types/should": "8.1.30",
     "@types/mocha": "2.2.32",
     "node-red": "0.15.2",
