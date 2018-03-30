@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-import * as EventEmitter from 'events';
+import * as events from 'events';
 
 /** 
  * A meager collection of Node-RED types for TypeScript.
@@ -88,7 +88,7 @@ export interface RED
         publish(topic: any, data: any, retain: any) : any; // TODO review
     }
 
-    events: EventEmitter;
+    events: events.EventEmitter;
 
     httpAdmin(req: any, res: any, next: any) : any; // TODO review
 
