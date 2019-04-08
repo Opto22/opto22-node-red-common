@@ -1,6 +1,6 @@
 {
   "name": "opto22-node-red-common",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Common code for Opto 22 Node-RED nodes",
   "author": "Opto 22",
   "license": "Apache-2.0",
@@ -11,8 +11,9 @@
   },
   "devDependencies": {
     "@types/node": "6.0.40",
-    "@types/should": "8.1.30",
+    "@types/should": "13.0.0",
     "@types/mocha": "2.2.32",
+    "@types/sinon": "7.0.10",
     "node-red": "0.15.2",
     "grunt": "1.0.1",
     "grunt-cli": "1.2.0",
@@ -26,7 +27,8 @@
     "grunt-mocha-istanbul": "5.0.2",    
     "mocha": "3.1.0",
     "istanbul": "0.4.5",
-    "should": "11.1.0",
+    "should": "13.2.3",
+    "sinon": "7.3.0",
     "typescript": "2.8.1",
     "typescript-formatter": "3.0.1"
   }  

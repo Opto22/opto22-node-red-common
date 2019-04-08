@@ -3,6 +3,8 @@ import * as mocha from 'mocha';
 import * as should from 'should';
 import * as CertificateUtil from '../src/CertificateUtil';
 import * as path from 'path';
+import * as sinon from 'sinon';
+import { SystemType } from '../src/SystemType';
 
 // Until we have an actual test, we need to require() the file
 // so that Istanbul will give us an accurate test coverage report.
@@ -26,8 +28,13 @@ describe('CertificateUtil', function()
         // getCertFile() will use RED.settings.userDir() + '/certs' for the path
         RED.settings.userDir = path.dirname(module.filename);
 
+        var stub = sinon.stub(SystemType, 'isSystemGroovEpic');
+        stub.onCall(0).returns(false);
+
         var buffer = CertificateUtil.getCertFile(RED, 'test.pem');
         should(buffer.toString()).be.exactly('test file contents');
+
+        stub.restore();
     });
 
 
