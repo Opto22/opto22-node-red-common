@@ -1,5 +1,5 @@
 /*
-   Copyright 2016 Opto 22
+   Copyright 2016-2019 Opto 22
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-import * as NodeRed  from '../typings/nodered';
+import * as NodeRed from '../typings/nodered';
 
 /**
  * Function pointer definition for Node msg 'input' event handlers.
@@ -30,6 +30,12 @@ export interface MessageHolder
     node: NodeRed.Node;
     inputEventObject: any; // the object on which to call the callback.
     inputEventCallback: MsgInputFunc;
+}
+
+export enum FullQueueBehaviorType
+{
+    REJECT_NEW = 1,
+    DROP_OLD = 2
 }
 
 /**
@@ -52,9 +58,12 @@ export default class MessageQueue
     // Map of nodes (node.id) to message count.
     private numMessagesPerNode: number[] = [];
 
-    constructor(maxLength: number)
+    private fullQueueBehaviorType: FullQueueBehaviorType;
+
+    constructor(maxLength: number, fullQueueBehaviorType?: FullQueueBehaviorType)
     {
         this.maxLength = maxLength;
+        this.fullQueueBehaviorType = fullQueueBehaviorType || FullQueueBehaviorType.REJECT_NEW;
     }
 
     /**
@@ -78,8 +87,15 @@ export default class MessageQueue
      */
     public add(msg: any, node: NodeRed.Node, inputEventObject: any, inputEventCallback: MsgInputFunc): number
     {
+        // See if the queue is full.
         if (this.queue.length >= this.maxLength) {
-            return -1;
+            // Should we drop the new message, or the oldest in the queue?
+            if (this.fullQueueBehaviorType == FullQueueBehaviorType.REJECT_NEW) {
+                return -1;
+            }
+            else if (this.fullQueueBehaviorType == FullQueueBehaviorType.DROP_OLD) {
+                this.queue.shift();
+            }
         }
 
         // Initialize and/or increment the count of messages for this node.
