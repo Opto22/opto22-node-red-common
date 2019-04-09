@@ -169,7 +169,7 @@ describe('MessageQueue class', function()
 
     it('drops old messages when queue is full (DROP_OLD option)', function(mochaDone: MochaDone)
     {
-        var mq = new MessageQueue(5, FullQueueBehaviorType.DROP_OLD);
+        var mq = new MessageQueue(5, 'DROP_OLD');
         var node = new MockNode('my-node');
         function noOp() { };
 

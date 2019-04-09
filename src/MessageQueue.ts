@@ -32,11 +32,7 @@ export interface MessageHolder
     inputEventCallback: MsgInputFunc;
 }
 
-export enum FullQueueBehaviorType
-{
-    REJECT_NEW = 1,
-    DROP_OLD = 2
-}
+export type FullQueueBehaviorType = 'REJECT_NEW' | 'DROP_OLD';
 
 /**
  * Class for throttling messages associated with an external resource.
@@ -63,7 +59,7 @@ export default class MessageQueue
     constructor(maxLength: number, fullQueueBehaviorType?: FullQueueBehaviorType)
     {
         this.maxLength = maxLength;
-        this.fullQueueBehaviorType = fullQueueBehaviorType || FullQueueBehaviorType.REJECT_NEW;
+        this.fullQueueBehaviorType = fullQueueBehaviorType || 'REJECT_NEW';
     }
 
     /**
@@ -90,10 +86,10 @@ export default class MessageQueue
         // See if the queue is full.
         if (this.queue.length >= this.maxLength) {
             // Should we drop the new message, or the oldest in the queue?
-            if (this.fullQueueBehaviorType == FullQueueBehaviorType.REJECT_NEW) {
+            if (this.fullQueueBehaviorType == 'REJECT_NEW') {
                 return -1;
             }
-            else if (this.fullQueueBehaviorType == FullQueueBehaviorType.DROP_OLD) {
+            else if (this.fullQueueBehaviorType == 'DROP_OLD') {
                 this.queue.shift();
             }
         }
