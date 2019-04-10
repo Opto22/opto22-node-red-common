@@ -90,7 +90,14 @@ export default class MessageQueue
                 return -1;
             }
             else if (this.fullQueueBehaviorType == 'DROP_OLD') {
-                this.queue.shift();
+                // Remove the oldest message
+                let msgRemoved = this.queue.shift();
+
+                // Decrement the node's counter for the removed message.
+                if (this.numMessagesPerNode[msgRemoved.node.id] !== undefined) {
+                    this.numMessagesPerNode[msgRemoved.node.id] =
+                        this.numMessagesPerNode[msgRemoved.node.id] - 1;
+                }
             }
         }
 
@@ -146,5 +153,10 @@ export default class MessageQueue
         }
 
         return this.numMessagesPerNode[node.id]; // return the remaining number of queued messages for this node
+    }
+
+    public getNumMessagesForNode(nodeId: string): number
+    {
+        return this.numMessagesPerNode[nodeId] || 0;
     }
 }
