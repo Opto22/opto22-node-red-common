@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-var NodeRedUtil = require('node-red/red/runtime/util'); // the real Node-RED util code
+var NodeRedUtil = require('@node-red/util/lib/util'); // the real Node-RED util code
 import * as NodeRed  from '../../typings/nodered';
 import { MockNodes } from './MockNodes';
 import * as events from 'events';
