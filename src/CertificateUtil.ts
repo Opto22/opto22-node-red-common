@@ -27,8 +27,16 @@ export function getCertFile(globalRED: NodeRed.RED, certPath: string): Buffer
         {
             if (SystemType.isSystemGroovEpic())
             {
-                // On EPIC, that path is fixed.
+                // On EPIC, the path is fixed.
                 certPath = path.join('/usr/lib/ssl/certs/', certPath);
+            }
+            else if (SystemType.isSystemGroovRio())
+            {
+                // On RIO, the path is fixed.
+                // Although the user probably doesn't need to even enter it,
+                // since RIO imports certifcates into the central store.
+                // But just in case they give us a file name, we'll use it.
+                certPath = path.join('/usr/local/share/ca-certificates/', certPath);
             }
             else
             {
