@@ -1,20 +1,9 @@
 import http = require('http');
-import * as NodeHandlers from "../../../src/nodes/base-node";
-import * as ConfigHandler from "../../../src/nodes/config-node";
-import * as ApiLib from "../../../src/swagger/lib/api";
 import * as should from 'should';
-import * as async from 'async';
-import * as TestUtil from "../../../test/test-util/test-util";
-import { RackInfo } from "../../../test/test-util/rack-info";
-import { WriteNodeImpl } from '../../../src/nodes/write-node';
-import { InputNodeScanner, InputNodeChangeType } from "../src/nodes/InputNodeScanner";
-
-var TestSettings = require('./settings.json');
-
+import { InputNodeScanner, InputNodeChangeType } from '../src/InputNodeScanner';
 
 describe('InputNodeScanner', function () {
 
-    let deviceConfig: ConfigHandler.DeviceConfiguration;
 
     before(function (beforeDone: MochaDone) {
         beforeDone();
@@ -24,7 +13,7 @@ describe('InputNodeScanner', function () {
         it('fires a timer', function (done) {
             let ins = new InputNodeScanner(5, InputNodeChangeType.None, undefined, true, () => {
                 should(ins.updateValue(456)).be.true();
-                ins.close();
+            ins.close();
                 done();
             });
             ins.startScan();
