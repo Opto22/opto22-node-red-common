@@ -107,8 +107,19 @@ export class InputNodeScanner {
                 valueChanged = true;
             }
             else {
-                // Just a straight comparison.
-                valueChanged = this.lastValue != newValue;
+                if (Array.isArray(newValue)) {
+                    for (var i = 0; i < newValue.length; i++) {
+                        // Just a straight comparison of each element.
+                        if (newValue[i] != this.lastValue[i]) {
+                            valueChanged = true;
+                            break;
+                        }
+                    }
+                }
+                else {
+                    // Just a straight comparison.
+                    valueChanged = this.lastValue != newValue;
+                }
             }
         }
 
