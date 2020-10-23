@@ -96,6 +96,23 @@ describe('InputNodeScanner', function () {
                 should(ins.updateValue('gamma')).be.false();
                 should(ins.updateValue('gamma ')).be.true(); // change
             });
+
+
+            it('returns True when an array element changes; floats', function () {
+                let ins = new InputNodeScanner(5, InputNodeChangeType.None, undefined, false);
+                should(ins.updateValue([100, 101, 102, 103])).be.false();
+                should(ins.updateValue([100, 102, 102, 103])).be.true(); // change
+                should(ins.updateValue([100, 102, 102, 103])).be.false();
+                should(ins.updateValue([101, 102, 103, 104])).be.true(); // change
+            });
+
+            it('returns True when an array element changes; strings', function () {
+                let ins = new InputNodeScanner(5, InputNodeChangeType.None, undefined, false);
+                should(ins.updateValue(['alpha', 'beta', 'gamma'])).be.false();
+                should(ins.updateValue(['alpha', 'BETA', 'gamma'])).be.true(); // change
+                should(ins.updateValue(['alpha', 'BETA', 'gamma'])).be.false();
+                should(ins.updateValue(['Alpha', 'beta', 'Gamma'])).be.true(); // change
+            });
         });
 
         describe('InputNodeChangeType.Deadband', function () {
@@ -129,6 +146,19 @@ describe('InputNodeScanner', function () {
                 should(ins.updateValue(-45.1)).be.true(); // change beyond the deadband
                 should(ins.updateValue(-44.2)).be.false();
                 should(ins.updateValue(-44.1)).be.true(); // change beyond the deadband
+            });
+
+
+            it('returns True when an array element changes beyond the deadband', function () {
+                let ins = new InputNodeScanner(5, InputNodeChangeType.Deadband, 1, false);
+                should(ins.updateValue([100.0, 101.0, 102.0, 103.0])).be.false();
+                should(ins.updateValue([100.0, 101.9, 102.0, 103.0])).be.false();
+                should(ins.updateValue([100.0, 102.0, 102.0, 103.0])).be.true(); // change beyond the deadband
+                should(ins.updateValue([100.0, 102.0, 102.0, 103.0])).be.false();
+                should(ins.updateValue([100.0, 101.9, 102.0, 103.0])).be.false();
+                should(ins.updateValue([100.0, 102.1, 102.0, 103.0])).be.false();
+                should(ins.updateValue([100.0, 100.0, 102.0, 103.0])).be.true(); // change beyond the deadband
+                should(ins.updateValue([101.0, 100.0, 103.0, 104.0])).be.true(); // change beyond the deadband
             });
         });
 

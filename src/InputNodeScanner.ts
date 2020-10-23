@@ -40,7 +40,7 @@ export class InputNodeScanner {
         this.timer = setTimeout(this.scanCallback, this.scanTimeMs);
     }
 
-    public updateValue(newValue: number | number[] | string | boolean): boolean {
+    public updateValue(newValue: number | number[] | string | string[] | boolean): boolean {
         var valueChanged = false;
         var sendInitialValue = !this.initialValueSent && this.sendInitialValue;
         this.initialValueSent = true;
