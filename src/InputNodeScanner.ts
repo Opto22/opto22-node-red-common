@@ -40,7 +40,7 @@ export class InputNodeScanner {
         this.timer = setTimeout(this.scanCallback, this.scanTimeMs);
     }
 
-    public updateValue(newValue: number | string | boolean): boolean {
+    public updateValue(newValue: number | number[] | string | boolean): boolean {
         var valueChanged = false;
         var sendInitialValue = !this.initialValueSent && this.sendInitialValue;
         this.initialValueSent = true;
@@ -55,11 +55,24 @@ export class InputNodeScanner {
                 valueChanged = true;
             }
             else {
-                // Check if the new value is different enough.
-                // Deadband might be 0, in which case all new values get sent.
-                if ((newValue >= (this.lastValue + this.deadband)) ||
-                    (newValue <= (this.lastValue - this.deadband))) {
-                    valueChanged = true;
+                if (typeof newValue == 'number') {
+                    // Check if the new value is different enough.
+                    // Deadband might be 0, in which case all new values get sent.
+                    if ((newValue >= (this.lastValue + this.deadband)) ||
+                        (newValue <= (this.lastValue - this.deadband))) {
+                        valueChanged = true;
+                    }
+                }
+                else if (Array.isArray(newValue)) {
+                    for (var i = 0; i < newValue.length; i++) {
+                        // Check if the new value is different enough.
+                        // Deadband might be 0, in which case all new values get sent.
+                        if ((newValue[i] >= (this.lastValue[i] + this.deadband)) ||
+                            (newValue[i] <= (this.lastValue[i] - this.deadband))) {
+                            valueChanged = true;
+                            break;
+                        }
+                    }
                 }
             }
         }
