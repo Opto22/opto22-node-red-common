@@ -101,9 +101,12 @@ describe('InputNodeScanner', function () {
             it('returns True when an array element changes; floats', function () {
                 let ins = new InputNodeScanner(5, InputNodeChangeType.None, undefined, false);
                 should(ins.updateValue([100, 101, 102, 103])).be.false();
-                should(ins.updateValue([100, 102, 102, 103])).be.true(); // change
+                should(ins.updateValue([100, 102, 102, 103])).be.true(); // [1] change
                 should(ins.updateValue([100, 102, 102, 103])).be.false();
-                should(ins.updateValue([101, 102, 103, 104])).be.true(); // change
+                should(ins.updateValue([101, 102, 103, 104])).be.true(); // [2] change
+                should(ins.updateValue([101, 102, 103, 104])).be.false(); 
+                should(ins.updateValue([121, 122, 123, 124])).be.true();  // all change
+                should(ins.updateValue([121, 122, 123, 124])).be.false();
             });
 
             it('returns True when an array element changes; strings', function () {
@@ -149,16 +152,30 @@ describe('InputNodeScanner', function () {
             });
 
 
-            it('returns True when an array element changes beyond the deadband', function () {
+            it('returns True when an array element changes beyond the deadband [basic test]', function () {
                 let ins = new InputNodeScanner(5, InputNodeChangeType.Deadband, 1, false);
-                should(ins.updateValue([100.0, 101.0, 102.0, 103.0])).be.false();
-                should(ins.updateValue([100.0, 101.9, 102.0, 103.0])).be.false();
-                should(ins.updateValue([100.0, 102.0, 102.0, 103.0])).be.true(); // change beyond the deadband
-                should(ins.updateValue([100.0, 102.0, 102.0, 103.0])).be.false();
-                should(ins.updateValue([100.0, 101.9, 102.0, 103.0])).be.false();
-                should(ins.updateValue([100.0, 102.1, 102.0, 103.0])).be.false();
-                should(ins.updateValue([100.0, 100.0, 102.0, 103.0])).be.true(); // change beyond the deadband
-                should(ins.updateValue([101.0, 100.0, 103.0, 104.0])).be.true(); // change beyond the deadband
+                should(ins.updateValue([100.0, 200.0, 300.0, 400.0])).be.false();
+                should(ins.updateValue([100.0, 200.9, 300.0, 400.0])).be.false();
+                should(ins.updateValue([100.0, 201.0, 300.0, 400.0])).be.true(); // change beyond the deadband
+                should(ins.updateValue([100.0, 201.0, 300.0, 400.0])).be.false();
+                should(ins.updateValue([100.0, 200.9, 300.0, 400.0])).be.false();
+                should(ins.updateValue([100.0, 201.1, 300.0, 400.0])).be.false();
+                should(ins.updateValue([100.0, 200.0, 300.0, 400.0])).be.true(); // change beyond the deadband
+                should(ins.updateValue([101.0, 200.0, 300.0, 400.0])).be.true(); // change beyond the deadband
+            });
+
+            it('tracks individual array elements separately from each other', function () {
+                let ins = new InputNodeScanner(5, InputNodeChangeType.Deadband, 1, false);
+                should(ins.updateValue([100.0, 200.0, 300.0, 400.0])).be.false();
+                should(ins.updateValue([100.5, 201.0, 300.0, 400.0])).be.true(); // [1] at deadband, while [0] starts increasing
+                should(ins.updateValue([100.6, 201.0, 300.0, 400.0])).be.false(); // [0] changes a bit, but no enough 
+                should(ins.updateValue([101.0, 201.0, 300.0, 400.0])).be.true(); // [0] at deadband
+                should(ins.updateValue([101.0, 201.0, 300.0, 400.0])).be.false(); // no change
+                should(ins.updateValue([105.0, 205.0, 305.0, 405.0])).be.true(); // all change at once
+                should(ins.updateValue([105.0, 205.0, 305.0, 405.7])).be.false(); // no change outside of deadband
+                should(ins.updateValue([106.5, 205.0, 305.0, 405.5])).be.true(); // [0] beyond deadband
+                should(ins.updateValue([106.5, 206.0, 306.0, 406.0])).be.true(); // [1], [2], and [3] at deadband
+                should(ins.updateValue([106.5, 206.0, 306.0, 406.0])).be.false(); // no change
             });
         });
 

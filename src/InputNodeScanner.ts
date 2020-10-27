@@ -61,6 +61,8 @@ export class InputNodeScanner {
                     if ((newValue >= (this.lastValue + this.deadband)) ||
                         (newValue <= (this.lastValue - this.deadband))) {
                         valueChanged = true;
+
+                        this.lastValue = newValue; // Capture the current value (since it changed)
                     }
                 }
                 else if (Array.isArray(newValue)) {
@@ -70,7 +72,10 @@ export class InputNodeScanner {
                         if ((newValue[i] >= (this.lastValue[i] + this.deadband)) ||
                             (newValue[i] <= (this.lastValue[i] - this.deadband))) {
                             valueChanged = true;
-                            break;
+
+                            // Capture the new value. For arrays, it's very important that this is
+                            // done for each element individually, and not the whole array at once.
+                            this.lastValue[i] = newValue[i] ;
                         }
                     }
                 }
@@ -121,14 +126,8 @@ export class InputNodeScanner {
                     valueChanged = this.lastValue != newValue;
                 }
             }
-        }
 
-        if (valueChanged) {
-            // console.log('this.nodeInputConfig = ' + JSON.stringify(this.nodeInputConfig, undefined, 2));
-            // console.log('newValue = ' + JSON.stringify(newValue, undefined, 2));
-
-            // Capture the current value. 
-            this.lastValue = newValue;
+            this.lastValue = newValue; // Capture the current value. 
         }
 
         // Only start the next timer after a response, and only if 
